@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lavandería La Impecable</title>
+<meta name="description" content="Lavandería La Impecable en Porlamar. Lavado por kilo, edredones, planchado y trajes. Delivery gratis.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: el ticket de lavandería (talón amarillo perforado) como pieza central; azul mar sobre fondo frío. */
+:root{
+  --bg:#F2F8FC; --surface:#FFFFFF; --fg:#0C2233; --muted:#4B6477; --line:#D2E1EC;
+  --accent:#0A62E8; --accent-fg:#FFFFFF; --ring:rgba(10,98,232,.11);
+  --ok:#0E8F5B; --closed:#B3402A;
+  --ticket:#FFD21F; --ticket-ink:#0C2233; --ticket-line:rgba(12,34,51,.38);
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --text:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#08141E; --surface:#0F2434; --fg:#E8F3FB; --muted:#9AB3C5; --line:#1F3D55;
+    --accent:#5AA2FF; --accent-fg:#06182A; --ring:rgba(90,162,255,.13);
+    --ok:#4CD39A; --closed:#FF8A73;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08141E; --surface:#0F2434; --fg:#E8F3FB; --muted:#9AB3C5; --line:#1F3D55;
+  --accent:#5AA2FF; --accent-fg:#06182A; --ring:rgba(90,162,255,.13);
+  --ok:#4CD39A; --closed:#FF8A73;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font:16px/1.55 var(--text);
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:20px 48px;
+}
+.page{max-width:1080px;margin-inline:auto;display:flex;flex-direction:column;gap:84px}
+.page>*{min-width:0}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:700 1.15rem var(--display);letter-spacing:-.01em}
+.brand svg{width:34px;height:34px;color:var(--accent);flex:none}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 24px;border-radius:999px;border:1.5px solid transparent;
+  font:600 1rem var(--text);text-decoration:none;cursor:pointer;
+}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-small{padding:9px 18px;font-size:.95rem}
+
+/* Héroe */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.hero>*{min-width:0}
+.eyebrow{font:500 .78rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+h1{font-size:clamp(2.3rem,6.4vw,4rem);font-weight:700;line-height:1.02;letter-spacing:-.025em;margin-block:14px 18px}
+.lede{color:var(--muted);font-size:1.15rem;max-width:44ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:.92rem}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex:none}
+.dot.open{background:var(--ok)}
+.dot.closed{background:var(--closed)}
+
+.hero-art{position:relative;isolation:isolate;padding-block:8px}
+.hero-art::before{
+  content:"";position:absolute;inset:-6% 0;z-index:-1;border-radius:50%;
+  background:repeating-radial-gradient(circle at 50% 50%,transparent 0 20px,var(--ring) 20px 22px);
+  -webkit-mask-image:radial-gradient(circle,#000 35%,transparent 70%);
+  mask-image:radial-gradient(circle,#000 35%,transparent 70%);
+}
+
+/* Ticket */
+.ticket{
+  position:relative;background:var(--ticket);color:var(--ticket-ink);
+  border-radius:14px;padding:24px;max-width:440px;margin-inline:auto;
+  box-shadow:0 18px 40px -22px rgba(0,0,0,.45);
+}
+@media (min-width:780px){.ticket{transform:rotate(-1.4deg)}}
+.ticket-head{display:flex;justify-content:space-between;gap:12px;font:500 .74rem var(--mono);text-transform:uppercase;letter-spacing:.09em}
+.ticket-name{font:700 1.3rem var(--display);letter-spacing:-.01em;margin-top:10px}
+.rates{display:flex;flex-direction:column;gap:14px;margin-top:20px}
+.rate{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.rate-label{font-weight:600}
+.rate-label small{display:block;font:400 .78rem var(--mono);opacity:.75}
+.rate-value{font:700 2rem/1 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.rate-value small{font:500 .8rem var(--mono);letter-spacing:0;opacity:.75}
+.cut{position:relative;height:0;margin:22px -24px;border-top:2px dashed var(--ticket-line)}
+.cut::before,.cut::after{content:"";position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--bg)}
+.cut::before{left:-11px}
+.cut::after{right:-11px}
+.ticket-foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font:500 .78rem var(--mono);text-transform:uppercase;letter-spacing:.06em}
+
+/* Secciones */
+.sec-head{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+h2{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.sec-head p{color:var(--muted);max-width:56ch}
+
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.step-icon{width:46px;height:46px;border-radius:50%;background:var(--ring);color:var(--accent);display:grid;place-items:center}
+.step-icon svg{width:24px;height:24px}
+.step-n{font:500 .76rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.step h3{font-size:1.3rem;font-weight:700;letter-spacing:-.01em}
+.step p{color:var(--muted)}
+
+/* Promoción */
+.promo{
+  background:var(--accent);color:var(--accent-fg);border-radius:18px;padding:28px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px 32px;flex-wrap:wrap;
+}
+.promo-text{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 320px}
+.promo .eyebrow{color:inherit;opacity:.8}
+.promo h2{font-size:clamp(1.5rem,3.6vw,2.1rem)}
+.promo p{opacity:.9;max-width:52ch}
+.promo-big{font:800 clamp(2.6rem,8vw,4.2rem)/1 var(--display);letter-spacing:-.03em;background:var(--ticket);color:var(--ticket-ink);border-radius:14px;padding:14px 22px;text-align:center}
+.promo-big small{display:block;font:500 .74rem var(--mono);letter-spacing:.09em;text-transform:uppercase;margin-top:6px}
+
+/* Lista de precios */
+.prices{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.price-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.price-card h3{font-size:1.25rem;letter-spacing:-.01em}
+.price-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.price-list li{display:flex;align-items:baseline;gap:8px}
+.price-list .n{flex:0 1 auto}
+.price-list .fill{flex:1 1 20px;min-width:12px;border-bottom:2px dotted var(--line);transform:translateY(-4px)}
+.price-list .v{font:500 1rem var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.price-card .nota{color:var(--muted);font-size:.9rem}
+
+/* Pedido */
+.order{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:start}
+.order>*{min-width:0}
+form{display:flex;flex-direction:column;gap:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row2>*{min-width:0}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-weight:600;font-size:.95rem}
+label span{font-weight:400;color:var(--muted)}
+input,select,textarea{
+  width:100%;font:400 1rem var(--text);color:var(--fg);background:var(--surface);
+  border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;
+}
+textarea{resize:vertical;min-height:84px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+fieldset{border:1px solid var(--line);border-radius:14px;padding:18px;margin:0;display:flex;flex-direction:column;gap:14px;min-width:0}
+legend{font:500 .78rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding-inline:6px}
+.item{display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center}
+.item-name{font-weight:600;min-width:0}
+.item-name small{display:block;font:400 .8rem var(--mono);color:var(--muted)}
+.stepper{display:grid;grid-template-columns:42px 64px 42px;gap:6px}
+.stepper button{
+  border:1.5px solid var(--line);background:var(--surface);color:var(--fg);
+  border-radius:10px;font:600 1.3rem var(--text);cursor:pointer;padding:0;height:44px;
+}
+.stepper button:hover{border-color:var(--accent);color:var(--accent)}
+.stepper input{text-align:center;font-weight:600;font-variant-numeric:tabular-nums;padding:8px 4px;height:44px}
+
+.receipt{
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;
+  display:flex;flex-direction:column;gap:12px;font-family:var(--mono);
+}
+@media (min-width:821px){.receipt{position:sticky;top:16px}}
+.receipt h3{font:500 .78rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+#r-lineas{display:flex;flex-direction:column;gap:8px}
+.line{display:flex;justify-content:space-between;gap:12px;font-size:.9rem;flex-wrap:wrap}
+.line b{font-weight:500;font-variant-numeric:tabular-nums}
+.line.desc{color:var(--ok)}
+.line.vacio{color:var(--muted)}
+.receipt hr{border:0;border-top:2px dashed var(--line);margin:2px 0;width:100%}
+.total-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.total{font:700 clamp(1.7rem,4.4vw,2.3rem)/1.1 var(--display);letter-spacing:-.02em;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.receipt small{font:400 .82rem var(--text);color:var(--muted)}
+.free{display:inline-block;font:600 .8rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ok)}
+
+.result{background:var(--surface);border:1.5px solid var(--accent);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.result h3{font-size:1.25rem}
+.result p{color:var(--muted)}
+.result pre{
+  margin:0;padding:14px;border-radius:10px;background:var(--bg);border:1px solid var(--line);
+  font:400 .9rem/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.result-actions{display:flex;flex-wrap:wrap;gap:10px}
+
+/* Visítanos */
+.visit{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.visit-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.visit-card h3{font-size:1.2rem}
+.visit-card .big{font:700 1.25rem var(--display);letter-spacing:-.01em;overflow-wrap:anywhere}
+.visit-card a.big{text-decoration:none}
+.visit-card a.big:hover{color:var(--accent)}
+.hours{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.hours li{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hours li span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.hours li.hoy{font-weight:700;color:var(--accent)}
+.visit-card .nota{color:var(--muted);font-size:.92rem}
+
+footer{display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:.92rem}
+
+@media (max-width:820px){.order{grid-template-columns:1fr}}
+@media (max-width:780px){.hero{grid-template-columns:1fr}.page{gap:64px}}
+@media (max-width:520px){.row2{grid-template-columns:1fr}.ticket{padding:20px}.cut{margin-inline:-20px}.promo{padding:22px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <path d="M20 4C14 12 8 17.5 8 24a12 12 0 0 0 24 0C32 17.5 26 12 20 4Z" fill="currentColor"/>
+        <path d="M13 25.5l4.5 4.5L27 20" stroke="#FFD21F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Lavandería La Impecable
+    </div>
+    <a class="btn btn-primary btn-small" href="#pedido">Pedir recogida</a>
+  </header>
+
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Porlamar · Isla de Margarita</p>
+      <h1>Tu ropa impecable, sin salir de casa.</h1>
+      <p class="lede">Buscamos tu ropa, la lavamos y te la llevamos a la puerta. El delivery no tiene costo.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#pedido">Pedir recogida</a>
+        <a class="btn btn-ghost" href="#precios">Ver precios</a>
+      </div>
+      <div class="badges">
+        <span class="badge"><span class="dot" id="estado-dot"></span><span id="estado-texto">Horario</span></span>
+        <span class="badge">Delivery gratis</span>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <div class="ticket" aria-label="Precios principales">
+        <div class="ticket-head"><span>Servicio a domicilio</span><span>N.º 0001</span></div>
+        <div class="ticket-name">Lavandería La Impecable</div>
+        <div class="rates">
+          <div class="rate">
+            <div class="rate-label">Ropa lavada<small>por cada kilo</small></div>
+            <div class="rate-value">3,5$ <small>/ kg</small></div>
+          </div>
+          <div class="rate">
+            <div class="rate-label">Edredones<small>individual, matrimonial, king</small></div>
+            <div class="rate-value">8–13$ <small>/ pieza</small></div>
+          </div>
+          <div class="rate">
+            <div class="rate-label">Planchado<small>por cada pieza</small></div>
+            <div class="rate-value">1,5$ <small>/ pieza</small></div>
+          </div>
+        </div>
+        <div class="cut"></div>
+        <div class="ticket-foot"><span>Recogida</span><span>Lavado</span><span>Entrega gratis</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="promo" aria-label="Promoción">
+    <div class="promo-text">
+      <p class="eyebrow">Promoción</p>
+      <h2>Lava 10 kilos o más y ahorra 5$</h2>
+      <p>A partir de 10 kg de ropa descontamos 5$ del total. El descuento se aplica solo en el cálculo de tu pedido.</p>
+    </div>
+    <div class="promo-big">−5$<small>desde 10 kg</small></div>
+  </section>
+
+  <section id="como-funciona">
+    <div class="sec-head">
+      <h2>Así funciona</h2>
+      <p>Tú pides, nosotros nos encargamos del resto.</p>
+    </div>
+    <div class="steps">
+      <article class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l1 12H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        </div>
+        <span class="step-n">Paso 1</span>
+        <h3>Buscamos tu ropa</h3>
+        <p>Haces tu pedido y pasamos por tu casa a recogerla.</p>
+      </article>
+      <article class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6.5h.01M11 6.5h.01"/></svg>
+        </div>
+        <span class="step-n">Paso 2</span>
+        <h3>La lavamos</h3>
+        <p>Lavamos y planchamos tu ropa en nuestra lavandería de Porlamar.</p>
+      </article>
+      <article class="step">
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+        </div>
+        <span class="step-n">Paso 3</span>
+        <h3>Te la llevamos gratis</h3>
+        <p>Te entregamos la ropa limpia en la puerta de tu casa, sin costo de delivery.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="precios">
+    <div class="sec-head">
+      <h2>Lista de precios</h2>
+      <p>Precios en dólares. Cada pieza se cobra por separado.</p>
+    </div>
+    <div class="prices">
+      <article class="price-card">
+        <h3>Lavado por kilo</h3>
+        <ul class="price-list">
+          <li><span class="n">Ropa lavada</span><span class="fill"></span><span class="v">3,5$ / kg</span></li>
+        </ul>
+        <p class="nota">Desde 10 kg te descontamos 5$.</p>
+      </article>
+      <article class="price-card">
+        <h3>Edredones</h3>
+        <ul class="price-list">
+          <li><span class="n">Individual</span><span class="fill"></span><span class="v">8$</span></li>
+          <li><span class="n">Matrimonial</span><span class="fill"></span><span class="v">10$</span></li>
+          <li><span class="n">King</span><span class="fill"></span><span class="v">13$</span></li>
+        </ul>
+      </article>
+      <article class="price-card">
+        <h3>Planchado</h3>
+        <ul class="price-list">
+          <li><span class="n">Plancha, por pieza</span><span class="fill"></span><span class="v">1,5$</span></li>
+        </ul>
+      </article>
+      <article class="price-card">
+        <h3>Trajes y ropa formal</h3>
+        <ul class="price-list">
+          <li><span class="n">Traje completo (saco y pantalón)</span><span class="fill"></span><span class="v">5$</span></li>
+          <li><span class="n">Vestido formal</span><span class="fill"></span><span class="v">5–7$</span></li>
+          <li><span class="n">Corbata</span><span class="fill"></span><span class="v">1$</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section id="pedido">
+    <div class="sec-head">
+      <h2>Haz tu pedido</h2>
+      <p>Marca lo que quieres lavar y escribe tus datos. Al terminar se prepara un mensaje de WhatsApp para enviarnos.</p>
+    </div>
+
+    <div class="order">
+      <form id="form-pedido" novalidate>
+        <fieldset>
+          <legend>Qué quieres lavar</legend>
+          <div id="items"></div>
+        </fieldset>
+
+        <div class="row2">
+          <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="direccion">Dirección de recogida y entrega</label>
+          <textarea id="direccion" name="direccion" autocomplete="street-address" required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="horario">Horario de recogida</label>
+          <select id="horario" name="horario">
+            <option>Mañana</option>
+            <option>Tarde</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="notas">Notas <span>(opcional)</span></label>
+          <textarea id="notas" name="notas"></textarea>
+        </div>
+
+        <div>
+          <button class="btn btn-primary" type="submit">Preparar mi pedido</button>
+        </div>
+
+        <div class="result" id="resultado" hidden aria-live="polite">
+          <h3>Tu pedido está listo</h3>
+          <p>Todavía no se ha enviado. Envíalo por WhatsApp para que lo recibamos.</p>
+          <pre id="mensaje"></pre>
+          <div class="result-actions">
+            <a class="btn btn-primary" id="wa-link" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+            <button class="btn btn-ghost" type="button" id="copiar">Copiar pedido</button>
+          </div>
+        </div>
+      </form>
+
+      <aside class="receipt" aria-label="Resumen estimado">
+        <h3>Resumen estimado</h3>
+        <div id="r-lineas"></div>
+        <hr>
+        <div class="total-label">Total estimado</div>
+        <div class="total" id="r-total"></div>
+        <span class="free">Delivery gratis</span>
+        <small id="r-nota">Los kilos se pesan al recibir la ropa, por eso el total puede variar un poco.</small>
+      </aside>
+    </div>
+  </section>
+
+  <section id="visitanos">
+    <div class="sec-head">
+      <h2>Visítanos</h2>
+      <p>Estamos en Porlamar. También puedes escribirnos o llamarnos.</p>
+    </div>
+    <div class="visit">
+      <article class="visit-card">
+        <h3>Dirección</h3>
+        <p class="big">Calle Campos, Porlamar</p>
+        <p class="nota">Isla de Margarita, estado Nueva Esparta.</p>
+        <a class="btn btn-ghost btn-small" href="https://www.google.com/maps/search/?api=1&query=Lavander%C3%ADa%20Calle%20Campos%20Porlamar" target="_blank" rel="noopener">Ver en el mapa</a>
+      </article>
+      <article class="visit-card">
+        <h3>Horario</h3>
+        <ul class="hours" id="horario-lista">
+          <li data-dias="1,2,3,4,5"><span>Lunes a viernes</span><span>8:00 am – 3:30 pm</span></li>
+          <li data-dias="6"><span>Sábado</span><span>8:00 am – 12:00 m</span></li>
+          <li data-dias="0"><span>Domingo</span><span>Cerrado</span></li>
+        </ul>
+        <p class="nota" id="horario-estado"></p>
+      </article>
+      <article class="visit-card">
+        <h3>Teléfonos</h3>
+        <a class="big" href="tel:+584167997424">+58 416-7997424</a>
+        <a class="big" href="tel:+584248404183">+58 424-8404183</a>
+        <a class="btn btn-primary btn-small" href="https://wa.me/584167997424" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <span>Lavandería La Impecable · Calle Campos, Porlamar</span>
+    <span>Delivery gratis</span>
+  </footer>
+</div>
+
+<script>
+/* ===== Datos del negocio: cambia aquí ===== */
+const WHATSAPP = "584167997424";      // número que recibe los pedidos (código de país, sin + ni espacios)
+const PROMO_MIN_KG = 10;               // kilos mínimos para el descuento
+const PROMO_DESCUENTO = 5;             // dólares que se descuentan
+const ZONA_HORARIA = "America/Caracas";
+const HORARIO = {                      // día de la semana (0 = domingo): [abre, cierra] en minutos desde medianoche
+  1: [480, 930], 2: [480, 930], 3: [480, 930], 4: [480, 930], 5: [480, 930],
+  6: [480, 720]
+};
+const ITEMS = [
+  { id: "kg",   nombre: "Ropa por kilo",       nota: "3,5$ por kg",       min: 3.5, max: 3.5, paso: 0.5, inicio: 5, unidad: "kg" },
+  { id: "edi",  nombre: "Edredón individual",  nota: "8$ por pieza",      min: 8,   max: 8,   paso: 1, inicio: 0 },
+  { id: "edm",  nombre: "Edredón matrimonial", nota: "10$ por pieza",     min: 10,  max: 10,  paso: 1, inicio: 0 },
+  { id: "edk",  nombre: "Edredón king",        nota: "13$ por pieza",     min: 13,  max: 13,  paso: 1, inicio: 0 },
+  { id: "pla",  nombre: "Planchado",           nota: "1,5$ por pieza",    min: 1.5, max: 1.5, paso: 1, inicio: 0 },
+  { id: "tra",  nombre: "Traje completo",      nota: "saco y pantalón, 5$", min: 5, max: 5,   paso: 1, inicio: 0 },
+  { id: "ves",  nombre: "Vestido formal",      nota: "5$ a 7$ según la prenda", min: 5, max: 7, paso: 1, inicio: 0 },
+  { id: "cor",  nombre: "Corbata",             nota: "1$ por pieza",      min: 1,   max: 1,   paso: 1, inicio: 0 }
+];
+
+/* ===== Utilidades ===== */
+const $ = id => document.getElementById(id);
+const num = n => (Math.round(n * 100) / 100).toLocaleString("es-VE", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+const usd = n => num(n) + "$";
+const rango = (a, b) => a === b ? usd(a) : num(a) + "–" + num(b) + "$";
+
+/* ===== Calculadora ===== */
+const cantidades = {};
+ITEMS.forEach(it => { cantidades[it.id] = it.inicio; });
+
+function construirItems() {
+  const cont = $("items");
+  ITEMS.forEach(it => {
+    const fila = document.createElement("div");
+    fila.className = "item";
+    fila.innerHTML =
+      '<div class="item-name">' + it.nombre + '<small>' + it.nota + '</small></div>' +
+      '<div class="stepper">' +
+        '<button type="button" data-id="' + it.id + '" data-d="-1" aria-label="Quitar ' + it.nombre + '">−</button>' +
+        '<input id="q-' + it.id + '" type="number" inputmode="decimal" min="0" step="' + it.paso + '" value="' + it.inicio + '" aria-label="Cantidad de ' + it.nombre + '">' +
+        '<button type="button" data-id="' + it.id + '" data-d="1" aria-label="Agregar ' + it.nombre + '">+</button>' +
+      '</div>';
+    cont.appendChild(fila);
+  });
+  cont.addEventListener("click", e => {
+    const b = e.target.closest("button[data-id]");
+    if (!b) return;
+    const it = ITEMS.find(x => x.id === b.dataset.id);
+    const campo = $("q-" + it.id);
+    let v = (parseFloat(campo.value) || 0) + it.paso * Number(b.dataset.d);
+    v = Math.max(0, v);
+    campo.value = it.paso < 1 ? v : Math.floor(v);
+    actualizar();
+  });
+  cont.addEventListener("input", actualizar);
+}
+
+function leer() {
+  ITEMS.forEach(it => {
+    let v = parseFloat($("q-" + it.id).value) || 0;
+    v = Math.max(0, v);
+    cantidades[it.id] = it.paso < 1 ? v : Math.floor(v);
+  });
+}
+
+function calcular() {
+  leer();
+  let min = 0, max = 0;
+  const lineas = [];
+  ITEMS.forEach(it => {
+    const q = cantidades[it.id];
+    if (!q) return;
+    const a = q * it.min, b = q * it.max;
+    min += a; max += b;
+    lineas.push({ texto: it.nombre + " · " + num(q) + (it.unidad ? " " + it.unidad : ""), valor: rango(a, b), plano: it.nombre + ": " + num(q) + (it.unidad ? " " + it.unidad : "") });
+  });
+  const promo = cantidades.kg >= PROMO_MIN_KG && min > 0;
+  if (promo) {
+    min = Math.max(0, min - PROMO_DESCUENTO);
+    max = Math.max(0, max - PROMO_DESCUENTO);
+  }
+  return { min, max, lineas, promo };
+}
+
+function actualizar() {
+  const r = calcular();
+  const cont = $("r-lineas");
+  cont.innerHTML = "";
+  if (!r.lineas.length) {
+    const v = document.createElement("div");
+    v.className = "line vacio";
+    v.textContent = "Agrega prendas para ver el total.";
+    cont.appendChild(v);
+  }
+  r.lineas.forEach(l => {
+    const d = document.createElement("div");
+    d.className = "line";
+    d.innerHTML = "<span></span><b></b>";
+    d.firstChild.textContent = l.texto;
+    d.lastChild.textContent = l.valor;
+    cont.appendChild(d);
+  });
+  if (r.promo) {
+    const d = document.createElement("div");
+    d.className = "line desc";
+    d.innerHTML = "<span>Promoción desde " + PROMO_MIN_KG + " kg</span><b>−" + usd(PROMO_DESCUENTO) + "</b>";
+    cont.appendChild(d);
+  }
+  $("r-total").textContent = r.lineas.length ? rango(r.min, r.max) : "0$";
+  const falta = PROMO_MIN_KG - cantidades.kg;
+  $("r-nota").textContent = (!r.promo && cantidades.kg > 0 && falta > 0 && falta <= 3)
+    ? "Te faltan " + num(falta) + " kg para ganar el descuento de " + usd(PROMO_DESCUENTO) + "."
+    : "Los kilos se pesan al recibir la ropa, por eso el total puede variar un poco.";
+}
+
+/* ===== Pedido por WhatsApp ===== */
+$("form-pedido").addEventListener("submit", e => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const r = calcular();
+  if (!r.lineas.length) {
+    $("r-nota").textContent = "Agrega al menos una prenda para hacer el pedido.";
+    $("items").scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  if (!form.reportValidity()) return;
+
+  const partes = [
+    "Hola, quiero pedir una recogida en Lavandería La Impecable.",
+    "",
+    "Nombre: " + $("nombre").value.trim(),
+    "Teléfono: " + $("telefono").value.trim(),
+    "Dirección: " + $("direccion").value.trim(),
+    "Horario de recogida: " + $("horario").value,
+    "",
+    "Pedido:"
+  ];
+  r.lineas.forEach(l => partes.push("- " + l.plano));
+  if (r.promo) partes.push("Promoción desde " + PROMO_MIN_KG + " kg: −" + usd(PROMO_DESCUENTO));
+  partes.push("", "Total estimado: " + rango(r.min, r.max) + " (delivery gratis)");
+  const notas = $("notas").value.trim();
+  if (notas) partes.push("Notas: " + notas);
+  const mensaje = partes.join("\n");
+
+  $("mensaje").textContent = mensaje;
+  $("wa-link").href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(mensaje);
+  const res = $("resultado");
+  res.hidden = false;
+  res.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+$("copiar").addEventListener("click", async e => {
+  const btn = e.currentTarget, texto = $("mensaje").textContent, original = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(texto);
+    btn.textContent = "Copiado";
+  } catch (err) {
+    const sel = window.getSelection(), rg = document.createRange();
+    rg.selectNodeContents($("mensaje"));
+    sel.removeAllRanges();
+    sel.addRange(rg);
+    btn.textContent = "Selecciona y copia";
+  }
+  setTimeout(() => { btn.textContent = original; }, 2200);
+});
+
+/* ===== Horario: abierto o cerrado según la hora de Venezuela ===== */
+function ahoraEnVenezuela() {
+  const p = new Intl.DateTimeFormat("en-US", {
+    timeZone: ZONA_HORARIA, weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+  }).formatToParts(new Date());
+  const get = t => p.find(x => x.type === t).value;
+  const dias = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  return { dia: dias[get("weekday")], min: parseInt(get("hour"), 10) * 60 + parseInt(get("minute"), 10) };
+}
+function horaTexto(m) {
+  const h = Math.floor(m / 60), mm = m % 60;
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  const suf = h === 12 && mm === 0 ? "m" : (h < 12 ? "am" : "pm");
+  return h12 + ":" + String(mm).padStart(2, "0") + " " + suf;
+}
+function proximaApertura(dia, min) {
+  for (let i = 0; i < 8; i++) {
+    const d = (dia + i) % 7, h = HORARIO[d];
+    if (!h) continue;
+    if (i === 0 && min >= h[0]) continue;
+    const cuando = i === 0 ? "hoy" : (i === 1 ? "mañana" : ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"][d]);
+    return "Abrimos " + cuando + " a las " + horaTexto(h[0]) + ".";
+  }
+  return "";
+}
+function estadoHorario() {
+  const { dia, min } = ahoraEnVenezuela();
+  const h = HORARIO[dia];
+  const abierto = !!h && min >= h[0] && min < h[1];
+  const dot = $("estado-dot");
+  dot.className = "dot " + (abierto ? "open" : "closed");
+  $("estado-texto").textContent = abierto ? "Abierto ahora" : "Cerrado ahora";
+  $("horario-estado").textContent = abierto ? "Hoy cerramos a las " + horaTexto(h[1]) + "." : proximaApertura(dia, min);
+  document.querySelectorAll("#horario-lista li").forEach(li => {
+    li.classList.toggle("hoy", li.dataset.dias.split(",").map(Number).includes(dia));
+  });
+}
+
+construirItems();
+actualizar();
+estadoHorario();
+setInterval(estadoHorario, 60000);
+</script>
+</body>
+</html>
